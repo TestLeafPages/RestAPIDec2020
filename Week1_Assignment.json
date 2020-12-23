@@ -1,0 +1,329 @@
+{
+	"info": {
+		"_postman_id": "3f225dca-c6db-4c61-8f05-a6d83d5c9095",
+		"name": "RestApiDecBatch",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "ServiceNow",
+			"item": [
+				{
+					"name": "Get All Change Request",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var resp = pm.response.json();\r",
+									"var count = resp.result.length;\r",
+									"console.log(count);\r",
+									"var ranIndex = Math.floor(Math.random() * count) ; \r",
+									"console.log(ranIndex);\r",
+									"var sysId = resp.result[ranIndex].sys_id;\r",
+									"pm.globals.set(\"sys_id\", sysId);\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "India@123",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "admin",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://dev68594.service-now.com/api/now/table/change_request?sysparm_limit=10&sysparm_fields=sys_id,number,short_description",
+							"protocol": "https",
+							"host": [
+								"dev68594",
+								"service-now",
+								"com"
+							],
+							"path": [
+								"api",
+								"now",
+								"table",
+								"change_request"
+							],
+							"query": [
+								{
+									"key": "sysparm_limit",
+									"value": "10"
+								},
+								{
+									"key": "sysparm_fields",
+									"value": "sys_id,number,short_description"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete a change request",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "India@123",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "admin",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "https://dev68594.service-now.com/api/now/table/change_request/{{sys_id}}",
+							"protocol": "https",
+							"host": [
+								"dev68594",
+								"service-now",
+								"com"
+							],
+							"path": [
+								"api",
+								"now",
+								"table",
+								"change_request",
+								"{{sys_id}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Jira",
+			"item": [
+				{
+					"name": "Create an issue in Jira",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var resp = pm.response.json();\r",
+									"\r",
+									"var issueId = resp.id;\r",
+									"\r",
+									"pm.globals.set(\"issue_id\",issueId);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "SIhyLEPWuP7ons282xdm7F48",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "hari.radhakrishnan@testleaf.com",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"fields\": {\r\n    \"project\":\r\n                {\r\n                    \"key\": \"RA\"\r\n                },\r\n    \"summary\": \"create issue in RA project\",\r\n    \"description\": \"Creating of an issue using project keys and issue type names using the REST API\",\r\n    \"issuetype\": {\r\n                    \"name\": \"Story\"\r\n                }\r\n    }\r\n}"
+						},
+						"url": {
+							"raw": "https://api-may2020.atlassian.net/rest/api/2/issue",
+							"protocol": "https",
+							"host": [
+								"api-may2020",
+								"atlassian",
+								"net"
+							],
+							"path": [
+								"rest",
+								"api",
+								"2",
+								"issue"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all Issue created in 24 hrs",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var resp = pm.response.json();\r",
+									"\r",
+									"var count = resp.issues.length;\r",
+									"\r",
+									"var currentTime = new Date().getTime();\r",
+									"var timeBefore24Hrs = currentTime - (30 * 60 * 1000);\r",
+									"\r",
+									"var date = new Date();\r",
+									"\r",
+									"for(var index = 0 ; index < count ; index++){\r",
+									"    \r",
+									"var issueTime = date.getTime(resp.issues[index].fields.created);\r",
+									"if(issueTime > timeBefore24Hrs){\r",
+									"   console.log( resp.issues[index].id);\r",
+									"}\r",
+									"\r",
+									"\r",
+									"\r",
+									"}\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "SIhyLEPWuP7ons282xdm7F48",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "hari.radhakrishnan@testleaf.com",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://api-may2020.atlassian.net/rest/api/2/search",
+							"protocol": "https",
+							"host": [
+								"api-may2020",
+								"atlassian",
+								"net"
+							],
+							"path": [
+								"rest",
+								"api",
+								"2",
+								"search"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create an issue in Jira Copy",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "SIhyLEPWuP7ons282xdm7F48",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "hari.radhakrishnan@testleaf.com",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"fields\": {\r\n    \r\n    \"description\": \"updated using chaining\"\r\n    \r\n    }\r\n}"
+						},
+						"url": {
+							"raw": "https://api-may2020.atlassian.net/rest/api/2/issue/{{issue_id}}",
+							"protocol": "https",
+							"host": [
+								"api-may2020",
+								"atlassian",
+								"net"
+							],
+							"path": [
+								"rest",
+								"api",
+								"2",
+								"issue",
+								"{{issue_id}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
